@@ -71,12 +71,9 @@ export class AddContactComponent implements OnInit {
             latitude: position.coords.latitude.toString(),
           });
         },
-        (error) => {
-          console.error('Error fetching location', error);
-        },
+        (error) => {},
       );
     } else {
-      console.error('Geolocation is not supported by this browser.');
     }
   }
 
@@ -88,7 +85,6 @@ export class AddContactComponent implements OnInit {
     this.userDetails.push(this.userForm.value);
     this.userService.users.set(this.userDetails);
     localStorage.setItem('users', JSON.stringify(this.userDetails));
-    console.log(this.userDetails, this.userForm.value);
     this.userForm.reset();
   }
 }

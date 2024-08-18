@@ -13,8 +13,4 @@ import { MapComponent } from './map/map.component';
 export class DashboardComponent {
   userService = inject(UserService);
   users = this.userService.users;
-
-  ngOnInit() {
-    console.log(this.users());
-  }
 }
