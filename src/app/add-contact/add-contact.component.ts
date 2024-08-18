@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -8,6 +8,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { NgClass } from '@angular/common';
+import { UserData } from '../core/model/user.model';
+import { UserService } from '../core/services/user.service';
 
 @Component({
   selector: 'app-add-contact',
@@ -17,7 +19,9 @@ import { NgClass } from '@angular/common';
   styleUrl: './add-contact.component.scss',
 })
 export class AddContactComponent implements OnInit {
+  userService = inject(UserService);
   userForm!: FormGroup;
+  userDetails: UserData[] = this.userService.users();
 
   constructor(private fb: FormBuilder) {}
 
@@ -26,7 +30,7 @@ export class AddContactComponent implements OnInit {
       name: new FormControl(null, Validators.required),
       phone: new FormControl(null, [
         Validators.required,
-        Validators.pattern('[0-9]{10}'), // Validates 10-digit phone number
+        Validators.pattern('[0-9]{10}'),
       ]),
 
       email: new FormControl(null, [Validators.required, Validators.email]),
@@ -35,14 +39,8 @@ export class AddContactComponent implements OnInit {
           addressLocation: new FormControl(null, Validators.required),
         }),
       ]),
-      longitude: new FormControl(
-        { value: '', disabled: true },
-        Validators.required,
-      ),
-      latitude: new FormControl(
-        { value: '', disabled: true },
-        Validators.required,
-      ),
+      longitude: new FormControl(null, Validators.required),
+      latitude: new FormControl(null, Validators.required),
     });
 
     this.setCurrentLocation();
@@ -64,7 +62,6 @@ export class AddContactComponent implements OnInit {
     this.address.removeAt(index);
   }
 
-  // Function to set current location
   setCurrentLocation() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -84,10 +81,14 @@ export class AddContactComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.userForm.valid) {
-      console.log('Form Submitted', this.userForm.value);
-    } else {
-      console.log('Form is invalid');
+    if (this.userForm.invalid) {
+      this.userForm.markAllAsTouched();
+      return;
     }
+    this.userDetails.push(this.userForm.value);
+    this.userService.users.set(this.userDetails);
+    localStorage.setItem('users', JSON.stringify(this.userDetails));
+    console.log(this.userDetails, this.userForm.value);
+    this.userForm.reset();
   }
 }

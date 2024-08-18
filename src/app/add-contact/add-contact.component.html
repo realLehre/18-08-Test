@@ -65,16 +65,14 @@
         >
         <div formArrayName="address">
           @for (control of address.controls; track control; let i = $index) {
-            <div class="flex items-center space-x-2">
+            <div class="flex items-center space-x-2" [formGroupName]="i">
               <input
                 id="address"
                 formControlName="addressLocation"
                 type="text"
                 class="mt-1 block w-full p-2 border border-gray-300 rounded-md"
                 [ngClass]="{
-                  'border-red-500':
-                    userForm.get('address')?.invalid &&
-                    userForm.get('address')?.touched,
+                  'border-red-500': control?.invalid && control?.touched,
                 }"
                 required
               />
@@ -95,21 +93,23 @@
               >
             </div>
           }
-          <div
-            class="text-green-600 cursor-pointer font-bold flex items-center space-x-1 mt-2"
-            (click)="onAddNewAddress()"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 448 512"
-              class="w-4 fill-green-600"
+          @if (address.controls.length < 5) {
+            <div
+              class="text-green-600 cursor-pointer font-bold flex items-center space-x-1 mt-2"
+              (click)="onAddNewAddress()"
             >
-              <path
-                d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z"
-              />
-            </svg>
-            <span>Add address</span>
-          </div>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 448 512"
+                class="w-4 fill-green-600"
+              >
+                <path
+                  d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z"
+                />
+              </svg>
+              <span>Add address</span>
+            </div>
+          }
         </div>
       </div>
 
@@ -142,7 +142,6 @@
       <button
         type="submit"
         class="w-full py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-        [disabled]="userForm.invalid"
       >
         Submit
       </button>
