@@ -1,11 +1,10 @@
 import { AfterViewInit, Component, inject, OnInit } from '@angular/core';
-import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import * as L from 'leaflet';
 import { UserService } from '../../core/services/user.service';
 @Component({
   selector: 'app-map',
   standalone: true,
-  imports: [LeafletModule],
+  imports: [],
   templateUrl: './map.component.html',
   styleUrl: './map.component.scss',
 })
